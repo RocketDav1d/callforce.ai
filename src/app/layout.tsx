@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster"
 import Provider from '@/components/Provider';
+import QueryProvider from '@/components/QueryProvider';
 
 
 const inter = Inter({ subsets: ['latin'] });
@@ -15,18 +16,27 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  layout = 'center', // Default to 'center' layout
 }: {
   children: React.ReactNode;
+  layout?: 'center' | 'sidebar'; // Define layout options
 }) {
   return (
     <html lang='en'>
       <body className={inter.className}>
         <Provider>
-          <main className='h-screen flex flex-col justify-center items-center'>
-            <Navbar />
+          <QueryProvider>
+          {/* <main className='h-screen flex'>  */}
+          <main className={`h-screen flex ${
+              layout === 'center'
+                ? 'flex-col justify-center items-center'
+                : '' 
+            }`}>
+            {layout !== 'sidebar' && <Navbar />} {/* Conditionally render Navbar */}
             {children}
           </main>
           <Toaster />
+          </QueryProvider>
         </Provider>
       </body>
     </html>
