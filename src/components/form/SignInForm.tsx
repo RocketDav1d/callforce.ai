@@ -15,6 +15,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import GoogleSignInButton from '../GoogleSignInButton';
+import HubspotSignInButton from '../HubspotSignInButton';
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/components/ui/use-toast"
@@ -47,7 +48,7 @@ const SignInForm = () => {
       password: values.password,
       redirect: false,
     })
-    console.log(signInData)
+    // console.log(signInData)
     if(signInData?.error) {
       toast({
         title: "Error",
@@ -56,7 +57,7 @@ const SignInForm = () => {
       })
     } else {
       router.refresh() 
-      console.log(signInData)
+      // console.log(signInData)
       router.push('/admin')
     }
   };
@@ -104,6 +105,7 @@ const SignInForm = () => {
         or
       </div>
       <GoogleSignInButton>Sign in with Google</GoogleSignInButton>
+      <HubspotSignInButton>Sign in with Hubspot</HubspotSignInButton>
       <p className='text-center text-sm text-gray-600 mt-2'>
         If you don&apos;t have an account, please&nbsp;
         <Link className='text-blue-500 hover:underline' href='/sign-up'>

@@ -15,15 +15,42 @@ export async function uploadToS3(file: File) {
 
         const file_key = 'uploads/' + Date.now().toString() + file.name.replace(' ', '-')
 
+        // new code
+        const fileExtension = file.name.split('.').pop();
+        let contentType = 'application/octet-stream'; // default binary stream
+
+        if (fileExtension) {
+            switch (fileExtension.toLowerCase()) {
+                case 'pdf':
+                    contentType = 'application/pdf';
+                    break;
+                case 'mp3':
+                    contentType = 'audio/mpeg';
+                    break;
+                case 'mp4':
+                    contentType = 'video/mp4';
+                    break;
+                case 'wav':
+                    contentType = 'audio/wav';
+                    break;
+                // add other cases as needed
+            }
+        }
+        // new code ends
+
         const params = {
             Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
             Key: file_key,
             Body: file,
+            // new code line 
+            // contentType: contentType,
         };
 
         const upload = s3.putObject(params).on('httpUploadProgress', evt => {
             console.log('uploading to S3...', parseInt((evt.loaded * 100 / evt.total).toString()) + '%')
         }).promise();
+
+        console.log(upload)
 
         await upload.then(data => {
             console.log('successfully uploaded to S3', file_key)

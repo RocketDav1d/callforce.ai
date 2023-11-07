@@ -10,7 +10,16 @@ import { useRouter } from 'next/navigation'
 import prisma from '@/lib/db';
 
 
-const FileUpload = () => {
+interface FileUploadProps {
+  dialogData: {
+    name: string;
+    groupId: string;
+  };
+  onUploadComplete: (success: boolean) => void;
+}
+
+
+const FileUpload = ({ dialogData, onUploadComplete }: FileUploadProps) => {
     const router = useRouter()
     const [uploading, setUploading] = React.useState(false)
     const queryClient = useQueryClient();
@@ -23,7 +32,7 @@ const FileUpload = () => {
 
         console.log(tokens)
 
-        const response = await axios.post('/api/extract', {
+        const response_extract = await axios.post('/api/extract', {
             s3_key: file_key,
             hubspot_access_token: tokens.account.access_token,
             hubspot_refresh_token: tokens.account.refresh_token,
@@ -34,33 +43,36 @@ const FileUpload = () => {
           }
           );
     
-        console.log("Inside FileUplaod:", response.data)
+        console.log("Inside FileUplaod:", response_extract.data)
 
-        if (!response.data) {
+        if (!response_extract.data) {
             toast.error('Error creating call');
             return;
           }
+        
+        console.log("GroupId inside FileUplaod:", dialogData  )
 
-        const chat = await prisma.chat.create({
-            data: {
-              id: response.data.chatId,
-              fileKey: file_key,
-              chatName: file_name, // replace with actual chat name
-              summary: response.data.summary,
-              transcript: response.data.transcript,
-              pdfUrl: 'Your PDF URL', // replace with actual PDF URL
-              userId: response.data.collection, // replace with actual user ID
-              groupId: 'Your group ID', // replace with actual group ID
-              // You might need to adjust the fields based on your actual data
-            },
-          });
-        return chat;
+        const data = {
+          id: response_extract.data.chatId,
+          fileKey: file_key,
+          chatName: dialogData.name, // replace with actual chat name
+          summary: response_extract.data.summary,
+          transcript: response_extract.data.transcript,
+          pdfUrl: 'Your PDF URL', // replace with actual PDF URL
+          userId: response_extract.data.collection, // replace with actual user ID
+          groupId: dialogData.groupId,
+        }
+
+        const response_create_chat = await axios.post('/api/create-chat', data)
+        console.log("Inside FileUplaod:", response_create_chat.data)
+        return response_create_chat.data
         },
         onSuccess: (data) => {
             if(data.id) {
               toast.success('Call created');
               router.push(`/calls/${data.id}`);
               queryClient.invalidateQueries(['user-calls']);
+              onUploadComplete(true);
             } else {
               toast.error('Call ID not received');
             }
@@ -68,6 +80,7 @@ const FileUpload = () => {
           onError: (err) => {
             toast.error('Error creating call');
             console.error(err);
+            onUploadComplete(false);
           },
         });
     
@@ -101,15 +114,6 @@ const FileUpload = () => {
                     return
                 }
                 mutate(data) 
-                //     {
-                //     onSuccess: ({call_id}) => {
-                //         toast.success('Chat created')
-                //         router.push(`/chat/${call_id}`)
-                //     },
-                //     onError: (err) => {
-                //         toast.error('Error creating chat')
-                //     }
-                // })
             }
             catch (err) {
             console.log(err)

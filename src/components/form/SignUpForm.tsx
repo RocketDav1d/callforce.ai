@@ -15,8 +15,10 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import GoogleSignInButton from '../GoogleSignInButton';
+import HubspotSignInButton from '../HubspotSignInButton';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+
 
 const FormSchema = z
   .object({
@@ -143,6 +145,7 @@ const SignUpForm = () => {
         or
       </div>
       <GoogleSignInButton>Sign up with Google</GoogleSignInButton>
+      <HubspotSignInButton>Sign up with Hubspot</HubspotSignInButton>
       <p className='text-center text-sm text-gray-600 mt-2'>
         If you don&apos;t have an account, please&nbsp;
         <Link className='text-blue-500 hover:underline' href='/sign-in'>

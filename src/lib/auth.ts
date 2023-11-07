@@ -9,6 +9,16 @@ import bcrypt from "bcrypt";
 
 
 export const authOptions: NextAuthOptions = {
+    // newly added
+    // cookies: {
+    //         sessionToken: {
+    //             name: "next-auth.session-token",
+    //             options: {
+    //                 secure: process.env.NODE_ENV === 'production',
+    //             },
+    //         },
+    //     },
+    // old stuff
     adapter: PrismaAdapter(prisma),
     secret: process.env.NEXTAUTH_SECRET,
     session: {
@@ -19,14 +29,23 @@ export const authOptions: NextAuthOptions = {
     },
     // Configure one or more authentication providers
     providers: [
-        // HubspotProvider({
-        // clientId: process.env.HUBSPOT_CLIENT_ID!,
-        // clientSecret: process.env.HUBSPOT_CLIENT_SECRET!
-        // }),
-        // GoogleProvider({
-        // clientId: process.env.GOOGLE_CLIENT_ID!,
-        // clientSecret: process.env.GOOGLE_CLIENT_SECRET!
-        // }),
+        HubspotProvider({
+        clientId: process.env.HUBSPOT_CLIENT_ID!,
+        clientSecret: process.env.HUBSPOT_CLIENT_SECRET!
+        }),
+        GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        // async profile(profile) {
+        //     return {
+        //         id: profile.id,
+        //         name: profile.name,
+        //         email: profile.email,
+        //         image: profile.picture,
+        //         username: profile.email
+        //     }
+        // }
+        }),
         CredentialsProvider({
         name: "Credentials",
         credentials: {
@@ -45,13 +64,15 @@ export const authOptions: NextAuthOptions = {
                 return null
             }
 
-            const passwordMatch = await bcrypt.compare(credentials?.password!, existingUser.password);
-            console.log(passwordMatch)
-
-            if(!passwordMatch) {
-                return null
+            if (existingUser.password) {
+                const passwordMatch = await bcrypt.compare(credentials.password, existingUser.password);
+                if(!passwordMatch) {
+                    return null
+                }
             }
-            console.log(existingUser)
+
+
+            // console.log(existingUser)
 
             return {
                 id: `${existingUser.id}`,
@@ -64,23 +85,30 @@ export const authOptions: NextAuthOptions = {
 
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+    return baseUrl + '/admin';
+        },
     async jwt({ token, user}) {
-        console.log(token)
+        // console.log("JWT callback", { token });
+
+        // console.log(token)
         if (user) {
             return {
                 ...token,
                 username: user.username,
+                // name: user.name,
             }
         }
         return token
       },
     async session({ session, token }) {
-        console.log(session)
+        // console.log(session)
         return {
             ...session,
             user: {
                 ...session.user,
                 username: token.username,
+                // name: token.name,
             },
         }
     },

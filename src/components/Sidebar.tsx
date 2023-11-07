@@ -2,6 +2,11 @@
 import { FC, ReactNode, useState, useContext, createContext } from "react";
 import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react";
 import Image from 'next/image';
+import { Button } from "./ui/button";
+import { useSession } from 'next-auth/react'
+import User from '@/components/User'
+import { signOut } from 'next-auth/react';
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface SidebarProps {
   children: ReactNode;
@@ -22,16 +27,21 @@ const SidebarContext = createContext<SidebarContextProps | undefined>(undefined)
 
 const Sidebar: FC<SidebarProps> = ({ children }) => {
   const [expanded, setExpanded] = useState<boolean>(true);
+  const { data: session } = useSession()
+
+  console.log(session)
+
+  const email = session?.user.email
 
   return (
     <aside className="h-screen">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
             <Image
-            src="https://img.logoipsum.com/243.svg"
-            width={32}  // Example width, adjust as needed
-            height={32} // Example height, adjust as needed
-            className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"}`}
+            src="https://img.logoipsum.com/269.svg"
+            width={50}  
+            height={50} 
+            className={`m-0 overflow-hidden transition-all ${expanded ? "w-20" : "w-0"}`}
             alt=""
             />
 
@@ -48,23 +58,29 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
         </SidebarContext.Provider>
 
         <div className="border-t flex p-3">
-          <Image
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-            width={40}  // Example width, adjust as needed
-            height={40} // Example height, adjust as needed
-            className="w-10 h-10 rounded-md"
-            alt=""
-          />
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
           <div
             className={`
               flex justify-between items-center
               overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
           `}
           >
-            <div className="leading-4">
-              <h4 className="font-semibold">John Doe</h4>
-              <span className="text-xs text-gray-600">johndoe@gmail.com</span>
-            </div>
+
+            {/* <div className="leading-4">
+              <h4 className="font-semibold">{email}</h4>
+            </div> */}
+            <Button onClick={() => 
+                signOut({
+                  redirect: true,
+                  callbackUrl: `${window.location.origin}/sign-in`,
+                })
+              } 
+              variant='destructive'>
+                Sign Out
+            </Button>
             <MoreVertical size={20} />
           </div>
         </div>

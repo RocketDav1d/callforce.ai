@@ -32,7 +32,7 @@ export default function RootLayout({
                 ? 'flex-col justify-center items-center'
                 : '' 
             }`}>
-            {layout !== 'sidebar' && <Navbar />} {/* Conditionally render Navbar */}
+            {/* {layout !== 'sidebar' && <Navbar />} */}
             {children}
           </main>
           <Toaster />

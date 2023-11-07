@@ -10,12 +10,111 @@ datasource db {
   url      = env("NEXT_PUBLIC_SUPABASE_URI")
 }
 
+// this is the previous User model 
+
+// model User {
+//   id        Int         @id @default(autoincrement())
+//   email     String      @unique
+//   username  String      @unique
+//   password  String
+//   createdAt DateTime    @default(now())
+//   updatedAt DateTime    @updatedAt
+// }
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
 model User {
-  id        Int         @id @default(autoincrement())
-  email     String      @unique
-  username  String      @unique
-  password  String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id            String      @id @default(cuid())
+  name          String?
+  username      String?     @unique
+  password      String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  email         String?     @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[] 
+  sessions      Session[]
+  groups        Group[]
+  // newly added
+  chats         Chat[]
 }
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  // newly added
+  chats     Chat[]
+}
+
+
+// below are the tables to implmeent the chat functionality
+
+enum Role {
+  USER
+  SYSTEM
+}
+
+model Chat {
+  id        String    @id @default(cuid())
+  fileKey   String  
+  chatName  String
+  summary   String
+  transcript String
+
+  pdfUrl    String
+  createdAt DateTime  @default(now())
+
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  messages  Message[]
+  groupId   String
+  group     Group     @relation(fields: [groupId], references: [id])
+}
+
+model Message {
+  id        String     @id @default(cuid())
+  chatId    String
+  content   String
+  createdAt DateTime  @default(now())
+  role      Role
+  chat      Chat      @relation(fields: [chatId], references: [id])
+}
+
+
