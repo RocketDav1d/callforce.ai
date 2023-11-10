@@ -23,9 +23,9 @@ const page = async () => {
         <div>
         {/* <div className='flex w-screen'> */}
         <Sidebar>
-          <SidebarItem icon={undefined} text={'Calls'}></SidebarItem>
-          <SidebarItem icon={undefined} text={'Scripts'}></SidebarItem>
-          <SidebarItem icon={undefined} text={'Analytics'}></SidebarItem>
+          <SidebarItem icon={undefined} href={"/admin2"} text={'Calls'}></SidebarItem>
+          {/* <SidebarItem icon={undefined} text={'Scripts'}></SidebarItem>
+          <SidebarItem icon={undefined} text={'Analytics'}></SidebarItem> */}
         </Sidebar>
         {/* <div className='w-screen flex flex-col'> */}
         <div>
