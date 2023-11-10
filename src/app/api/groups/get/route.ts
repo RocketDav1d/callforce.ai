@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     // Get the current user's ID from the session or JWT
     const session = await getServerSession(authOptions);
-    console.log("Session inside get Group: ", session);
+    // console.log("Session inside get Group: ", session);
   
     if (!session) {
       // NextResponse.json({ error: 'User not authenticated' }, {status: 401});
@@ -17,12 +17,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } 
   
     const userEmail = session.user.email;
-    console.log("User Email: ", userEmail);
+    // console.log("User Email: ", userEmail);
   
     if (!userEmail) {
       // NextResponse.json({ error: 'User not authenticated' }, {status: 409});
       return res.status(409).json({message: "User not authenticated"});
     }
+
+    
 
     // Fetch the user and their groups from the database
     const user = await prisma.user.findUnique({
@@ -34,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Include other fields you want
         groups: true,
       },
-    });
+    })
+
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

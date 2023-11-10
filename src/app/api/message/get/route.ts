@@ -6,12 +6,16 @@ import authOptions from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import { randomUUID } from 'crypto';
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET (req: NextRequest, res: NextResponse) {
   if (req.method === 'GET') {
 
+    const chatId = req.nextUrl.searchParams.get('chatId');
 
-    const body = await req.json();
-    const chatId = body.chatId;
+
+    // const body = await req.json();
+    // const chatId = body.chatId;
+
+    console.log("Get messages   ", chatId)
 
     
     // get userID from session
@@ -37,7 +41,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     try {
       const messages = await prisma.message.findMany({
         where: {
-          chatId: chatId,
+          chatId: chatId!,
         },
         orderBy: {
           createdAt: 'asc',

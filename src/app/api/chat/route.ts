@@ -43,7 +43,7 @@ export async function POST(req: NextRequest, res: NextResponse ) {
             }
         },
     });
-    console.log("Chats inside get chat: ", chat);
+    console.log("Chats inside get chat: ");
 
     if (!chat) {
         return NextResponse.json({ error: 'Chats not found for this user' }, {status: 404});

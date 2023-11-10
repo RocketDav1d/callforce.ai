@@ -10,10 +10,11 @@ export async function POST(req: Request, res: NextResponse) {
   if (req.method === 'POST') {
 
     const body = await req.json();
-    const { content, chatId, role } = body; // Add the content and role fields to your request body
+    console.log('POST inside create-message BODY', body);
+    const { content, chatId, role, prompt } = body; // Add the content and role fields to your request body
     console.log('POST inside create-message', body);
     
-    
+
     // get userID from session
     const session = await getServerSession(authOptions);
     console.log("Session inside Extract Route: ", session);
@@ -42,6 +43,7 @@ export async function POST(req: Request, res: NextResponse) {
           chatId, // Assuming this is passed from the client and exists in the DB
           content, // The content of the message
           role,    // The role (USER or SYSTEM)
+          prompt
         },
       });
 

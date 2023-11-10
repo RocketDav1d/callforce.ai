@@ -17,7 +17,6 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { PenSquare } from 'lucide-react';
-import test from "node:test"
  
 const FormSchema = z.object({
   prompt: z
@@ -32,7 +31,7 @@ const FormSchema = z.object({
 
 interface Props {
   file_key: string;
-  onFormSubmit: (response: { answer: string; context_text: string }) => void;
+  onFormSubmit: (response: { answer: string; context_text: string, createdAt: string, prompt: string }) => void;
 }
 
  
@@ -60,10 +59,14 @@ export default function TextareaForm({file_key, onFormSubmit}: Props) {
     console.log("Parsed API Response: ", apiResponse);
     const answer = apiResponse.answer
     const context_text = apiResponse.context_text
+    const prompt = data.prompt;
+
 
     onFormSubmit({
       answer: answer,
-      context_text: context_text
+      context_text: context_text,
+      createdAt: new Date().toISOString(),
+      prompt: prompt
     });
 
     toast({

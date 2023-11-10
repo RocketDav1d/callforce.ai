@@ -35,7 +35,7 @@ const page = async () => {
 
             <UploadParentComponent/>
             {/* <UpcomingEvents /> */}
-            {/* <GroupManager /> */}
+            <GroupManager />
         </div>
       </div>
       </div>

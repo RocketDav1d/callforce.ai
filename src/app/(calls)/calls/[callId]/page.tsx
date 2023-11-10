@@ -19,6 +19,10 @@ import { headers } from "next/headers"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { file } from 'googleapis/build/src/apis/file';
 import Response from '@/components/Response';
+import { randomUUID } from 'crypto';
+import cuid from 'cuid';
+import { toast } from "@/components/ui/use-toast"
+import { chat } from 'googleapis/build/src/apis/chat';
 
 
  
@@ -31,8 +35,8 @@ type Prop = {
   }
 
 enum Role {
-    USER,
-    SYSTEM
+    USER = 'USER',
+    SYSTEM = 'SYSTEM'
   }
 
 type Message = {
@@ -41,6 +45,7 @@ type Message = {
   createdAt: string;
   chatId: string;
   role: Role;
+  prompt: string;
 };
 
 
@@ -70,14 +75,12 @@ type Chat = {
 
 const Page = ({params: {callId}}: Prop) => {
   const [chatData, setChatData] = useState<Chat | null>(null);
-  const [apiResponse, setApiResponse] = useState({
-    answer: '',
-    context_text: ''
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  // const soemChatData = await fetch
-  
-  console.log("asdfjk")
+  // const [apiResponse, setApiResponse] = useState({
+  //   answer: '',
+  //   context_text: ''
+  // });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,26 +97,41 @@ const Page = ({params: {callId}}: Prop) => {
   }, [callId]);
 
   const createMessage = async (message: Message) => {
-    const response = await fetch('/api/create-message', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message)
-    });
-    const responseData = await response.json();
-    console.log("Create Message Response: ", responseData);
-  }
+    try {
+      const response = await fetch('/api/message/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message)
+      });
+      const responseData = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(responseData.message || 'Error creating message');
+      }
+  
+      console.log("Create Message Response: ", responseData);
+      return responseData; // Return the response data for the caller to handle
+    } catch (error) {
+      console.error("Error in createMessage:", error);
+      toast({
+            title: "Something went wrong :(",
+            description: "Please try again later."
+          })
+      throw error; // Rethrow the error for the caller to handle
+      }}
+
 
   const getMessages = async (chatId: string) => {
-    const response = await fetch('/api/get-messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({chatId})
-    });
+    const response = await fetch(`/api/message/get/?chatId=${chatId}`);
     const responseData = await response.json();
+    if (response.ok) {
+      setMessages(responseData); // Assuming the response has a 'messages' field
+    } else {
+      // Handle errors here
+      console.error('Failed to fetch messages:', responseData);
+    }
   }
 
   useEffect(() => {
@@ -121,9 +139,37 @@ const Page = ({params: {callId}}: Prop) => {
   }, [callId]);
 
 
-  const handleApiResponse = (response: { answer: string; context_text: string }) => {
-    setApiResponse(response);
+  // const handleApiResponse = (response: { answer: string; context_text: string }) => {
+  //   setApiResponse(response);
+  //   console.log("API Response: ", response);
+  // };
+
+
+  const handleFormSubmit = async (response: { answer: string; context_text: string, createdAt: string, prompt: string }) => {
+    // You need to define what the role should be, here I'm assuming USER role.
+    const newMessage = {
+      id: cuid(),
+      content: response.answer,
+      createdAt: response.createdAt,
+      chatId: callId,
+      role: Role.USER, // or SYSTEM, depending on the logic of your app
+      prompt: response.prompt
+    };
+    try {
+      const createdMessage = await createMessage(newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    }
+    catch (error) {
+      console.error("Error in handleFormSubmit:", error);
+      toast({
+            title: "Something went wrong :(",
+            description: "Message not created. Please try again later."
+          })
+    throw error; 
+    }
   };
+
+
 
   if (!chatData) {
     return <div>Loading...</div>; // Or any other loading state
@@ -132,12 +178,48 @@ const Page = ({params: {callId}}: Prop) => {
   const { chatName, summary, fileKey } = chatData;
 
 
+  const handleEditMessage = async (id: string) => {
+    // Logic to handle editing message
+    // This might involve setting some state to show an input field for editing
+    // and then sending a PATCH or PUT request to your API
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    console.log("Delete Message Request: ", messageId);
+    try {
+      const response = await fetch('/api/message/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(messageId)
+      });
+      const responseData = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(responseData.message || 'Error deleting message');
+      }
+  
+      console.log("Delete Message Response: ", responseData);
+      setMessages(prevMessages => prevMessages.filter(message => message.id !== messageId));
+      toast({
+        title: "Message deleted",
+      })
+    } catch (error) {
+      console.error("Error in createMessage:", error);
+      toast({
+            title: "Something went wrong :(",
+            description: "Message not deleted. Please try again later."
+          })
+      }}
+
+
   return (
     <div className="flex w-screen h-screen overflow-hidden"> {/* Ensures the overall page doesn't scroll */}
       <Sidebar> {/* Sidebar */}
-        <SidebarItem icon={undefined} text={'Calls'}></SidebarItem>
-        <SidebarItem icon={undefined} text={'Scripts'}></SidebarItem>
-        <SidebarItem icon={undefined} text={'Analytics'}></SidebarItem>
+        <SidebarItem icon={undefined} href={"/admin2"} text={'Calls'}></SidebarItem>
+        {/* <SidebarItem icon={undefined} text={'Scripts'}></SidebarItem>
+        <SidebarItem icon={undefined} text={'Analytics'}></SidebarItem> */}
       </Sidebar>
 
       <div className="flex-grow flex flex-col"> {/* Container for the content next to the sidebar */}
@@ -169,10 +251,29 @@ const Page = ({params: {callId}}: Prop) => {
               <CardTitle>Create New Answer</CardTitle>
             </CardHeader>
             <CardContent>
-              <TextareaForm file_key={fileKey} onFormSubmit={handleApiResponse}/>
-              <Response />
+              <TextareaForm file_key={fileKey} onFormSubmit={handleFormSubmit}/>
             </CardContent>
           </Card>
+          <div className="w-full"
+            style={{
+              overflowY: 'scroll',
+              msOverflowStyle: 'none', /* IE and Edge */
+              scrollbarWidth: 'none' /* Firefox */
+            }}
+          >
+          {/* Render messages using the Response component */}
+          {messages && messages.map((message) => (
+          <Response
+            key={message.id}
+            id={message.id}
+            query={message.prompt}
+            answer={message.content}
+            onEdit={handleEditMessage}
+            onDelete={handleDeleteMessage}
+            />
+            ))}
+          </div>
+
           </div>
 
         </div>
@@ -187,31 +288,6 @@ export default Page;
 
 
 
-// return (
-//   <>
-//       <div className='flex flex-row w-screen h-screen'> {/* Flex container for sidebar and grid */}
-//           <Sidebar> {/* Sidebar remains flex item, not affected by grid */}
-//           <SidebarItem icon={undefined} text={'Calls'}></SidebarItem>
-//           <SidebarItem icon={undefined} text={'Scripts'}></SidebarItem>
-//           <SidebarItem icon={undefined} text={'Analytics'}></SidebarItem>
-//           </Sidebar>
-
-//           <div className=" w-screen parent grid grid-cols-5 grid-rows-5 m-20 border border-red">
-//               <div className="div1 col-start-1 row-start-1 col-span-1 row-span-1">
-//                 <MenuBarCall/>
-//               </div>
-//               <div className="div2 col-start-2 row-start-1 col-span-1 row-span-1">
-//               </div>
-//               <div className="div3 col-start-3 row-start-1 col-span-1 row-span-1">
-
-//               </div>
-//               <div className="div4 col-start-1 row-start-2 col-span-3 row-span-1">
-
-//               </div>
-//           </div>
-//           </div>
-//         </>
-// )
 
 
 
@@ -221,78 +297,28 @@ export default Page;
 
 
 
+  // const createMessage = async (message: Message) => {
+  //   try {
+  //   const response = await fetch('/api/message/create', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(message)
+  //   });
+  //   const responseData = await response.json();
+    
+  //   if (!response.ok) {
+  //     throw new Error(responseData.message || 'Error creating message');
+  //   }
 
-
-
-
-
-
-
-
-
-
-
-      // <RootLayout layout="sidebar">
-      //   <div className='flex w-screen border border-primary border-red-600'>
-      //   <Sidebar>
-      //     <SidebarItem icon={undefined} text={'Calls'}></SidebarItem>
-      //     <SidebarItem icon={undefined} text={'Scripts'}></SidebarItem>
-      //     <SidebarItem icon={undefined} text={'Analytics'}></SidebarItem>
-      //   </Sidebar>
-      //   <MenuBarCall/>
-      //   </div>
-
-      // </RootLayout>
-
-
-
-
-// import { chats } from '@/lib/db/schema';
-// import { auth } from '@clerk/nextjs';
-// import { redirect } from 'next/navigation';
-// import React from 'react';
-// import { eq } from 'drizzle-orm'
-// import {db} from '@/lib/db';
-
-// type Prop = {
-//   params: {
-//     chatId: string;
-//   }
-// }
-
-// const ChatPage =  async ({params: {chatId}}: Prop) => {
-//   const {userId} = await auth();
-//   if (!userId) {
-//     return redirect('/sign-in');
-//   }
-//   const _chats = await db.select().from(chats).where(eq(chats.userId, userId));
-//   if (!_chats) {
-//     return redirect("/");
-
-//   }
-//   // if (!_chats.find(chat=> chat.id === parseInt(chatId))) {
-//   //   return redirect("/");
-//   // }
-
-//   return (
-//     <div className='flex max-h-screen overflow-scroll'>
-//       <div className='flex w-full max-h-screen overflow-scroll'>
-//         {/* chat sidebar */}
-//         <div className='flex-[1] max-w-xs'>
-//           {/* <ChatSideBar/> */}
-//         </div>
-//         {/* pdf viewer */}
-//         <div className='max-h-screen p-4 overflow-scroll flex-[5]'>
-//           {/* <PDFViewer/> */}
-//         </div>
-//         {/* chat component */}
-//         <div className='flex-[3] border-l-4 border-l-slate-200'>
-//           {/* <ChatComponent/> */}
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-
-// export default ChatPage;
+  //   console.log("Create Message Response: ", responseData);
+  //   setMessages((prevMessages) => [...prevMessages, responseData]);
+    
+  //   }
+  // catch (error) {
+  //   console.log("Error creating message: ", error);
+  //   toast({
+  //     title: "Something went wrong :(",
+  //   })
+  // }

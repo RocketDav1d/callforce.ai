@@ -3,6 +3,23 @@ import React, { useState } from 'react';
 import { UploadDialog } from './Dialog'; // Adjust the import path as necessary
 import FileUpload2 from './FileUpload2'; // Adjust the import path as necessary
 import { Button } from './ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // This would be the parent component that contains the button to open the dialog
 const UploadParentComponent = () => {
