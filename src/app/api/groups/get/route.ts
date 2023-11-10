@@ -5,30 +5,28 @@ import authOptions from '@/lib/auth'
 import { NextResponse, NextRequest } from "next/server";
 
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   if (req.method === 'GET') {
     // Get the current user's ID from the session or JWT
     const session = await getServerSession(authOptions);
     // console.log("Session inside get Group: ", session);
   
     if (!session) {
-      // NextResponse.json({ error: 'User not authenticated' }, {status: 401});
-      return res.status(401).json({message: "User not authenticated"});
+      NextResponse.json({ error: 'User not authenticated' }, {status: 401});
     } 
   
-    const userEmail = session.user.email;
+    const userEmail = session!.user.email;
     // console.log("User Email: ", userEmail);
   
     if (!userEmail) {
-      // NextResponse.json({ error: 'User not authenticated' }, {status: 409});
-      return res.status(409).json({message: "User not authenticated"});
+      NextResponse.json({ error: 'User not authenticated' }, {status: 409});
     }
 
     
 
     // Fetch the user and their groups from the database
     const user = await prisma.user.findUnique({
-      where: { email: userEmail },
+      where: { email: userEmail! },
       select: {
         id: true,
         name: true,
@@ -40,13 +38,13 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
 
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return NextResponse.json({ error: 'User not found' }, {status: 404});
     }
 
     // console.log(res)
     console.log("User Groups ", user.groups);
     return NextResponse.json({"groups": user.groups}, {status: 200})
   } else {
-    res.status(405).json({ message: 'Method not allowed' });
+    return NextResponse.json({ error: 'Method not allowed' }, {status: 405});
   }
 }

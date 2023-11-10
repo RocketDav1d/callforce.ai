@@ -95,10 +95,10 @@ import authOptions from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import axios from "axios";
 import qs from 'qs';
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
 
   console.log('Tokens API Route Hit');
 
@@ -106,14 +106,14 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
   console.log("Session inside Tokens Route: ", session);
 
   if (!session) {
-    return res.status(401).json({message: "User not authenticated"});
+    return NextResponse.json({message: "User not authenticated"}, {status: 401})
   }
 
   const userEmail = session.user.email;
   console.log("User Email: ", userEmail);
 
   if (!userEmail) {
-    return res.status(409).json({message: "User not authenticated"});
+    return NextResponse.json({message: "User not authenticated"}, {status: 409})
   }
 
   try {
@@ -124,7 +124,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     console.log("User inside Tokens Route: ", user);
 
     if (!user) {
-      return res.status(404).json({message: "User not found"});
+      return NextResponse.json({message: "User not found"}, {status: 404})
     }
 
     const userId = user.id;
@@ -147,7 +147,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     console.log("Account inside Tokens Route: ", account);
 
     if (!account) {
-      return res.status(404).json({message: "Tokens not found"});
+      return NextResponse.json({message: "Tokens not found"}, {status: 404})
     }
 
     // new code
@@ -199,7 +199,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     return NextResponse.json({"account": account}, {status: 200})
   } catch (error) {
     console.error(error);
-    return res.json({message: "Internal Server Error"})
+    return NextResponse.json({message: "Internal Server Error"}, {status: 500})
   }
 }
 
