@@ -18,7 +18,7 @@ type AccountType = {
 
 
 
-export default async function handler(req: NextRequest) {
+export async function GET(req: NextRequest) {
     // Fetch the user session
     const session = await getServerSession(authOptions);
     console.log("📆 Inside Calendar Route -> Session: ", session);
@@ -106,5 +106,3 @@ export default async function handler(req: NextRequest) {
     NextResponse.json({status: 405});
   }
 }
-
-export { handler as GET }

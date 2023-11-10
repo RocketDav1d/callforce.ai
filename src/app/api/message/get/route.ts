@@ -6,7 +6,7 @@ import authOptions from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import { randomUUID } from 'crypto';
 
-export async function GET (req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   if (req.method === 'GET') {
 
     const chatId = req.nextUrl.searchParams.get('chatId');

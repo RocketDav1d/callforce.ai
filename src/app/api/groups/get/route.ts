@@ -5,7 +5,7 @@ import authOptions from '@/lib/auth'
 import { NextResponse, NextRequest } from "next/server";
 
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     // Get the current user's ID from the session or JWT
     const session = await getServerSession(authOptions);
@@ -50,5 +50,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).json({ message: 'Method not allowed' });
   }
 }
-
-export { handler as GET }

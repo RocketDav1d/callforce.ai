@@ -5,7 +5,7 @@ import authOptions from '@/lib/auth'
 import { NextResponse, NextRequest } from "next/server";
 
 
-export default async function handler(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   if (req.method === 'GET') {
 
     const groupId = req.nextUrl.searchParams.get('groupId');
@@ -53,4 +53,3 @@ export default async function handler(req: NextRequest, res: NextResponse) {
   }
 }
 
-export { handler as GET }
