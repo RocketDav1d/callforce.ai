@@ -246,7 +246,7 @@ const Page = ({params: {callId}}: Prop) => {
   return (
     <div className="flex w-screen h-screen overflow-hidden"> {/* Ensures the overall page doesn't scroll */}
       <Sidebar> {/* Sidebar remains flex item, not affected by grid */}
-        <SidebarItem icon={undefined} text={'Calls'} href="/admin2"></SidebarItem>
+        <SidebarItem icon={undefined} text={'Calls'} href="/admin"></SidebarItem>
         <SidebarItem icon={undefined} text={'Analystics'} href="/analytics"></SidebarItem>
         <SidebarItem icon={undefined} text={'Settings'} href="/settings"></SidebarItem>
       </Sidebar>

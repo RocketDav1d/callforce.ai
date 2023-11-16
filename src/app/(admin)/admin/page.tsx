@@ -29,7 +29,7 @@ const page = async () => {
                 {/* <div className='flex flex-row w-screen h-screen'> Flex container for sidebar and grid */}
                 <div className='flex h-screen overflow-hidden'>
                     <Sidebar> 
-                        <SidebarItem icon={undefined} text={'Calls'} href="/admin2"></SidebarItem>
+                        <SidebarItem icon={undefined} text={'Calls'} href="/admin"></SidebarItem>
                         <SidebarItem icon={undefined} text={'Analystics'} href="/analytics"></SidebarItem>
                         <SidebarItem icon={undefined} text={'Settings'} href="/settings"></SidebarItem>
                     </Sidebar>

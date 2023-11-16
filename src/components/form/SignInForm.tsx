@@ -58,7 +58,7 @@ const SignInForm = () => {
     } else {
       router.refresh() 
       // console.log(signInData)
-      router.push('/admin2')
+      router.push('/admin')
     }
   };
 

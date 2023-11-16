@@ -23,7 +23,7 @@ const page = async () => {
             <RootLayout>
                 <div className='flex flex-row w-screen h-screen'> {/* Flex container for sidebar and grid */}
                     <Sidebar> {/* Sidebar remains flex item, not affected by grid */}
-                    <SidebarItem icon={undefined} text={'Calls'} href="/admin2"></SidebarItem>
+                    <SidebarItem icon={undefined} text={'Calls'} href="/admin"></SidebarItem>
                     <SidebarItem icon={undefined} text={'Analystics'} href="/analytics"></SidebarItem>
                     <SidebarItem icon={undefined} text={'Settings'} href="/settings"></SidebarItem>
                     </Sidebar>
