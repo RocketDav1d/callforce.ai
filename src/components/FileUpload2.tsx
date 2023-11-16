@@ -44,6 +44,10 @@ const FileUpload = ({ dialogData, onUploadComplete }: FileUploadProps) => {
               }
           }
           );
+
+        // setInterval(async () => {
+
+        
     
         console.log("Inside FileUplaod:", response_extract.data)
         if (!response_extract.data) {

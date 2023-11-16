@@ -5,7 +5,7 @@ import prisma from '../../../lib/db';  // Adjust the path as needed
 import { v4 as uuidv4 } from 'uuid';
 
 
-
+export const maxDuration = 30
 
 
 export async function POST(req: Request) {
@@ -63,6 +63,7 @@ export async function POST(req: Request) {
         userId,
       }),
     });
+
 
     console.log("Python API inside extract route: ", response.status);
 
