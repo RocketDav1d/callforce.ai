@@ -32,6 +32,9 @@ interface CustomSession extends JWT {
   export async function GET(req: NextRequest) {
     // Extract the callId from the URL search parameters
     const callId = req.nextUrl.searchParams.get('callId');
+    const session_2 = await getServerSession(authOptions);
+    console.log("Session_2 inside access-check:", session_2); // Debugging
+
     const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET }) as CustomSession;
 
     console.log("Session inside access-check:", session); // Debugging

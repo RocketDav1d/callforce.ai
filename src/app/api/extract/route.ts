@@ -63,6 +63,8 @@ export async function POST(req: Request) {
       }),
     });
 
+    console.log("Python API inside extract route: ", response.status);
+
     if (!response.ok) {
       return NextResponse.json({ error: `Hi there - Request failed with status ${response.status}` }, {status: response.status});
     }
