@@ -126,8 +126,10 @@ const getAccount = async (userId: string) => {
           });
 
         if (!account) {
+            console.log("🚩 Account not found");
             throw new Error("Account not found");
         }
+        console.log("Account inside getAccount:", account)
 
         const currentTime = Math.floor(Date.now() / 1000);
         if (account.expires_at && account.expires_at < currentTime) 
@@ -145,6 +147,8 @@ const getAccount = async (userId: string) => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
             });
+            console.log("Response from Hubspot:", response.status);
+            console.log("Response from Hubspot:", response.data);
     
             const newTokenData = response.data;
             console.log("New Token Data inside Tokens Route: ", newTokenData);
@@ -166,6 +170,10 @@ const getAccount = async (userId: string) => {
                 providerAccountId: true,
             }
             });
+            if (!account) {
+              throw new Error("Account not found");
+            }
+            console.log("Account inside getAccount after refresh:", account)
         }
         return account;
     }
