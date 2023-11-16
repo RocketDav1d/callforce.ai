@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req: Request) {
   try {
+    console.log("Inside extract route:", req.method, "<");
     const body = await req.json();
 
     // get userID from session
