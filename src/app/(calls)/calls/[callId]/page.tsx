@@ -330,6 +330,7 @@ const Page = ({params: {callId}}: Prop) => {
               id={message.id}
               query={message.prompt}
               answer={message.content}
+              createdAt={message.createdAt}
               onEdit={handleEditMessage}
               onDelete={handleDeleteMessage}
               />

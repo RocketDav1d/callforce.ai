@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Trash, FileEdit } from 'lucide-react';
 import { Separator } from "@/components/ui/separator"
+import { timestamp } from 'aws-sdk/clients/cloudfront';
 
 
 
@@ -24,76 +25,45 @@ interface Props {
     id: string;
     answer: string;
     query: string;
+    createdAt: string;
     onEdit: (id: string) => void;
     onDelete: (id: string) => void;
 }
 
-export default function CardWithForm({id, answer, query, onEdit, onDelete}: Props) {
+export default function CardWithForm({id, answer, query, createdAt, onEdit, onDelete}: Props) {
+
+  function formatDate(dateString: string): string {
+    const options: Intl.DateTimeFormatOptions = { year: '2-digit', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString('de-DE', options);
+  }
 
     return (
         <Card className="w-full p-4 mt-5">
-      <CardHeader>
-        <div className='flex justify-between border'>
-          <div className='flex flex-col border'>
-            <div className='mb-2 border'>
-              <Badge variant="secondary">User</Badge>
-              <p>{query}</p>
-            </div>
-            <div>
-              <Badge>AI</Badge>
-              <p>{answer}</p>
-            </div>
-          </div>
-          <div className='flex flex-col items-end border'>
-            <Button className='bg-gray-400 mb-2' aria-label="Edit" onClick={() => onEdit(id)}>
-              <FileEdit className="h-4 w-4" />
-            </Button>
-            <Button className='bg-gray-400' aria-label="Delete" onClick={() => onDelete(id)}>
-              <Trash className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {/* Content here if needed */}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <p className='text-sm text-gray-500'>Created 2 days ago</p>
-      </CardFooter>
-    </Card>
-    )
-    return (
-      <Card className="w-full p-4 mt-5">
-        <CardHeader>
-            <div className='flex justify-end border'>
-                <div className='order-2 ml-4'>
-                    <Button className='bg-gray-400' aria-label="Toggle italic" onClick={() => onEdit(id)}>
-                        <FileEdit className="h-4 w-4" />
-                    </Button>
-                </div>
-                <div className='order-3 ml-2 bg-gray-50'>
-                    <Button className='bg-gray-400' aria-label="Toggle italic" onClick={() => onDelete(id)}>
-                        <Trash className="h-4 w-4" />
-                    </Button>
-                </div>
-                </div>
-        </CardHeader>
         <CardContent>
-                <div className='order-1 grow'>
-                    <Badge variant="secondary">User</Badge>
-                </div>
+        <div className='flex justify-between'>
+            <div className='flex flex-col'>
+              <div className='mb-2'>
+                <Badge className="mb-3" variant="secondary">User</Badge>
                 <p>{query}</p>
-                <Separator />
-                <div className='order-1 grow p-4'>
-                    <Badge>AI</Badge>
-                </div>
-                <p>{answer}</p>
-                
+              </div>
+              <div className='mt-5'>
+                <Badge className="mb-3">AI</Badge>
+                <h2 className='text-xl'>{answer}</h2>
+              </div>
+            </div>
+            <div className='flex flex-col items-end'>
+              {/* <Button className='bg-gray-400 mb-2' aria-label="Edit" onClick={() => onEdit(id)}>
+                <FileEdit className="h-4 w-4" />
+              </Button> */}
+              <Button className='bg-gray-400' aria-label="Delete" onClick={() => onDelete(id)}>
+                <Trash className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-            
-            <p className='text-sm text-gray-500'>Created 2 days ago</p>
+          <p className='text-sm text-gray-500'>{formatDate(createdAt)}</p>
         </CardFooter>
-      </Card>
+    </Card>
     )
   }
