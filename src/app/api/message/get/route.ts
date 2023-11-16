@@ -15,12 +15,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
     // const body = await req.json();
     // const chatId = body.chatId;
 
-    console.log("Get messages   ", chatId)
+    // console.log("Get messages   ", chatId)
 
     
     // get userID from session
     const session = await getServerSession(authOptions);
-    console.log("Session inside get-message Route: ", session);
+    // console.log("Session inside get-message Route: ", session);
     if (!session) {
       return NextResponse.json({message: "User not authenticated"}, {status: 401});
     }

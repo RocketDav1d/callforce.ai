@@ -52,6 +52,8 @@ model User {
   groups        Group[]
   // newly added
   chats         Chat[]
+  properties    HubSpotProperty[]
+  subscription  UserSubscription?
 }
 
 model VerificationToken {
@@ -107,4 +109,46 @@ model Message {
   chat      Chat      @relation(fields: [chatId], references: [id])
 }
 
+enum PropertyType {
+  CONTACT
+  COMPANY
+  DEAL
+}
 
+model HubSpotProperty {
+  id          String    @id @default(cuid())
+  name        String
+  label       String
+  description String
+  type        PropertyType
+  createdAt   DateTime  @default(now())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  ExtractedProperty ExtractedProperty?
+}
+
+model ExtractedProperty {
+  id                  String    @id @default(cuid())
+  name                String
+  embedding_id        String
+  distance            Float
+  createdAt           DateTime  @default(now())
+  HubspotPropertyId   String 
+  HubSpotProperty     HubSpotProperty @relation(fields: [HubspotPropertyId], references: [id])
+
+  @@unique([HubspotPropertyId])
+}
+
+
+
+model UserSubscription {
+  id                         String    @id @default(cuid())
+  userId                     String
+  user                       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId           String @unique
+  stripeSubscriptionId       String @unique
+  stripePriceId              String 
+  stripeCurrentPeriodEnd     DateTime
+
+  @@unique([userId])
+}

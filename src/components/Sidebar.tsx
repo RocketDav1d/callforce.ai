@@ -105,72 +105,12 @@ const SidebarItem: FC<SidebarItemProps> = ({ icon, text, href, active, alert }) 
     <Link legacyBehavior href={href!}>
     <a className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${active ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800" : "hover:bg-indigo-50 text-gray-600"} w-full`}>
       {icon && <span className='mr-3'>{icon}</span>}
-      <span className="flex-1">{text}</span>
+      <span className={`flex-1 transition-all ${expanded ? "inline" : "hidden"}`}>{text}</span>
       {alert && <span className="absolute right-2 w-2 h-2 rounded-full bg-red-500"/>}
     </a>
   </Link>
 
 
-    // <li
-    //   className={`
-    //     relative flex items-center py-2 px-3 my-1
-    //     font-medium rounded-md cursor-pointer
-    //     transition-colors group
-    //     ${
-    //       active
-    //         ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-    //         : "hover:bg-indigo-50 text-gray-600"
-    //     }
-    // `}
-    // >
-    //   {href ? (
-    //     <Link href={href}>
-    //       {icon}
-    //       {text}
-    //       {/* <a className="flex items-center py-2 px-3 my-1 ...">
-    //         {icon}
-    //         <span className={`...`}>
-    //           {text}
-    //         </span>
-    //       </a> */}
-    //     </Link>
-    //   ) : (
-    //     <div className="flex items-center py-2 px-3 my-1 ...">
-    //       {icon}
-    //       <span className={`...`}>
-    //         {text}
-    //       </span>
-    //     </div>
-    //   )}
-    //   {icon}
-    //   <span
-    //     className={`overflow-hidden transition-all ${
-    //       expanded ? "w-52 ml-3" : "w-0"
-    //     }`}
-    //   >
-    //     {text}
-    //   </span>
-    //   {alert && (
-    //     <div
-    //       className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
-    //         expanded ? "" : "top-2"
-    //       }`}
-    //     />
-    //   )}
-
-    //   {!expanded && (
-    //     <div
-    //       className={`
-    //       absolute left-full rounded-md px-2 py-1 ml-6
-    //       bg-indigo-100 text-indigo-800 text-sm
-    //       invisible opacity-20 -translate-x-3 transition-all
-    //       group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-    //   `}
-    //     >
-    //       {text}
-    //     </div>
-    //   )}
-    // </li>
   )
 };
 

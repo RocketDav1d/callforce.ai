@@ -9,12 +9,12 @@ export async function POST(req: NextRequest, res: NextResponse ) {
     const body = await req.json();
     const callId = body.callId;
 
-    console.log("Chat ID inside get chat: ", callId);
+    // console.log("Chat ID inside get chat: ", callId);
 
     // get userID from session
     const session = await getServerSession(authOptions);
 
-    console.log("Session inside get chat: ", session);
+    // console.log("Session inside get chat: ", session);
 
     if (!session || !session.user) {
         return NextResponse.json({ error: 'User not authenticated' }, {status: 401});
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest, res: NextResponse ) {
             }
         },
     });
-    console.log("Chats inside get chat: ");
+    // console.log("Chats inside get chat: ");
 
     if (!chat) {
         return NextResponse.json({ error: 'Chats not found for this user' }, {status: 404});

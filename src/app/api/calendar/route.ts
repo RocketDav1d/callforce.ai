@@ -21,7 +21,7 @@ type AccountType = {
 export async function GET(req: NextRequest) {
     // Fetch the user session
     const session = await getServerSession(authOptions);
-    console.log("📆 Inside Calendar Route -> Session: ", session);
+    // console.log("📆 Inside Calendar Route -> Session: ", session);
     
     // Ensure the user is authenticated and has a userId
     if (!session || !session.user) {
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
       const user = await prisma.user.findUnique({
         where: { email: userEmail },
       });
-      console.log("User inside Calendar Route: ", user);
+      // console.log("User inside Calendar Route: ", user);
 
       if (!user) {
         return NextResponse.json({ error: 'User not found' }, {status: 404});
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
         }
       });
 
-      console.log("📆 Inside Calendar Route -> Account: ", account);
+      // console.log("📆 Inside Calendar Route -> Account: ", account);
 
       if (!account || !account.access_token) {
         return NextResponse.json({ error: 'No access token found.' }, {status: 400});

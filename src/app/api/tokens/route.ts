@@ -53,7 +53,7 @@
 //         refresh_token: true
 //       }
 //     });
-
+ 
 //     console.log("Account: ", account);
 
 //     if (!account) {
@@ -155,8 +155,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
     if (account.expires_at && account.expires_at < currentTime) {
       console.log("Access token is expired. Refreshing token...");
 
-      // Implement your logic to refresh the access token here
-      // The following is just an example and you should replace it with the actual logic
       const response = await axios.post('https://api.hubapi.com/oauth/v1/token', qs.stringify({
         grant_type: 'refresh_token',
         client_id: process.env.HUBSPOT_CLIENT_ID,

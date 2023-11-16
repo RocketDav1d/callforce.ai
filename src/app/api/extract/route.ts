@@ -36,17 +36,21 @@ export async function POST(req: Request) {
 
     console.log('POST inside extract route', body);
 
-    const { s3_key, hubspot_access_token, hubspot_refresh_token } = body;
+    // const { s3_key, hubspot_access_token, hubspot_refresh_token } = body;
+    const { s3_key } = body;
 
-    console.log({ s3_key, hubspot_access_token, hubspot_refresh_token });
+    // console.log({ s3_key, hubspot_access_token, hubspot_refresh_token });
 
-    if (!s3_key || !hubspot_access_token || !hubspot_refresh_token) {
+    // || !hubspot_access_token || !hubspot_refresh_token
+    if (!s3_key) {
       return NextResponse.json({ error: 'Missing required parameters' }, {status: 400});
     }
 
     console.log('Inside extract route');
-    console.log({ s3_key, hubspot_access_token, hubspot_refresh_token });
 
+
+    // hubspot_access_token,
+    // hubspot_refresh_token,
     const response = await fetch('http://127.0.0.1:8000/extract', {
       method: 'POST',
       headers: {
@@ -54,8 +58,6 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         s3_key,
-        hubspot_access_token,
-        hubspot_refresh_token,
         userId,
       }),
     });
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
     if (!response.ok) {
       return NextResponse.json({ error: `Hi there - Request failed with status ${response.status}` }, {status: response.status});
     }
-
+    console.log("Response inside extract route: ", response);
     const data = await response.json();
     const chatId = uuidv4();
     return NextResponse.json({ ...data, chatId: chatId }, {status: 200 });

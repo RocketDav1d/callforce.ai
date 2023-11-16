@@ -11,14 +11,14 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const groupId = req.nextUrl.searchParams.get('groupId');
     // Get the current user's ID from the session or JWT
     const session = await getServerSession(authOptions);
-    console.log("Session inside get Group: ", session);
+    console.log("Session inside get-chats route: ", session);
   
     if (!session) {
       return NextResponse.json({ error: 'User not authenticated' }, {status: 401});
     } 
   
     const userEmail = session.user.email;
-    console.log("User Email: ", userEmail);
+    // console.log("User Email: ", userEmail);
   
     if (!userEmail) {
       return  NextResponse.json({ error: 'User not authenticated' }, {status: 409});
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     }
 
     // console.log(res)
-    console.log("User Groups ", groupWithChats);
+    // console.log("User Groups ", groupWithChats);
     return NextResponse.json(groupWithChats, {status: 200})
   } else {
     return NextResponse.json({ error: 'Method not allowed' }, {status: 405});

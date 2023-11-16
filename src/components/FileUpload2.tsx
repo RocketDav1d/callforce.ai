@@ -28,14 +28,16 @@ const FileUpload = ({ dialogData, onUploadComplete }: FileUploadProps) => {
     const { mutate, isLoading } = useMutation({
         mutationFn: async ({ file_key, file_name }: { file_key: string, file_name: string }): Promise<any> => {
 
-        const { data: tokens } = await axios.get(`/api/tokens`, { withCredentials: true });
 
-        console.log(tokens)
+
+        const { data: properties } = await axios.get(`/api/hubspot/get`, { withCredentials: true });
+
+        // console.log(tokens)
 
         const response_extract = await axios.post('/api/extract', {
             s3_key: file_key,
-            hubspot_access_token: tokens.account.access_token,
-            hubspot_refresh_token: tokens.account.refresh_token,
+            // hubspot_access_token: tokens.account.access_token,
+            // hubspot_refresh_token: tokens.account.refresh_token,
           }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -44,13 +46,29 @@ const FileUpload = ({ dialogData, onUploadComplete }: FileUploadProps) => {
           );
     
         console.log("Inside FileUplaod:", response_extract.data)
-
         if (!response_extract.data) {
             toast.error('Error creating call');
             return;
           }
+
         
-        console.log("GroupId inside FileUplaod:", dialogData  )
+        const response_hubspot_query = await axios.post('/api/hubspot/make-query', {
+            properties: properties,
+            s3_key: file_key,
+          }, {
+            headers: {
+                'Content-Type': 'application/json'
+              }
+          }
+          );
+        if (!response_hubspot_query.data) {
+            console.log("Error querying Hubspot Properties")
+            toast.error('Error querying Hubspot Properties');
+          }
+        
+        console.log("Inside FileUplaod:", response_hubspot_query.data)
+        
+        // console.log("GroupId inside FileUplaod:", dialogData  )
 
         const data = {
           id: response_extract.data.chatId,
