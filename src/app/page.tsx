@@ -14,7 +14,7 @@ export default async function Home() {
       {session ? (
         // If logged in, show button to admin page
       
-        <Link className={buttonVariants()} href='/admin2'>
+        <Link className={buttonVariants()} href='/admin'>
           Open my Admin
         </Link>
       ) : (

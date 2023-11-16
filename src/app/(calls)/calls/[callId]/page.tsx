@@ -254,7 +254,7 @@ const Page = ({params: {callId}}: Prop) => {
       <div className="flex-grow flex flex-col"> {/* Container for the content next to the sidebar */}
         <div className="flex justify-between p-4 border-b"> {/* Top title and menu bar */}
           <div className="flex items-center">
-            <a href="/admin2">
+            <a href="/admin">
               <ArrowLeft className="h-6 w-6 mr-2"/>
             </a>
             <h1 className="text-2xl font-bold">{chatName}</h1>
