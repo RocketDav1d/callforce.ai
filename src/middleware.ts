@@ -7,8 +7,11 @@ export { default } from "next-auth/middleware"
 
 
 
-
-
+export const config = {
+  matcher: [
+    "/calls/:callId", // matches /calls/123
+  ],
+};
 
 
 
