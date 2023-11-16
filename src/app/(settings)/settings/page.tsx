@@ -180,7 +180,8 @@ const getAccount = async (userId: string) => {
 const getProperties = async (token: AccessToken)=> {
     console.log("Token inside getProperties:", token.access_token)
     try {
-    const response = await fetch('http://127.0.0.1:8000/properties', {
+    const response = await fetch('https://callforce-worker-07ee47d87df1.herokuapp.com/properties', {
+    // const response = await fetch('http://127.0.0.1:8000/properties', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,21 +1,12 @@
 import authOptions from '@/lib/auth'
 import { getServerSession } from 'next-auth'
-import React, { useState } from 'react'
+import React from 'react'
 import  Sidebar, { SidebarItem } from '@/components/Sidebar';
-import RootLayout from '../../layout'
-import FileUpload from '@/components/FileUpload';
-import FileUpload2 from '@/components/FileUpload2';
-import Calendar from '@/components/UpcomingEvents';
-import UpcomingEvents from '@/components/UpcomingEvents';
 import GroupManager from '@/components/GroupManager2';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@radix-ui/react-dialog';
-import { UploadDialog } from '@/components/Dialog';
 import UploadParentComponent from '@/components/UploadParentComponent';
-import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
 
-{/* <UpcomingEvents /> */}
-{/* <GroupManager /> */}
 
 // const Page = () => {
 const page = async () => { 
@@ -59,7 +50,15 @@ const page = async () => {
         )
     }
 
-    return ( <h1> Please login to see this page </h1>)
+    return ( 
+        <div>
+            <h1> Please login to see this page </h1>
+            <Link className={buttonVariants()} href='/sign-in'>
+          Sign In
+        </Link>
+        </div>
+    
+    )
 
  }
 

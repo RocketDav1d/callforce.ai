@@ -113,7 +113,7 @@ const Page = ({params: {callId}}: Prop) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const rawResponse = await fetch('http://localhost:3000/api/chat', {
+      const rawResponse = await fetch('/api/chat', {
         method: 'POST',
         // headers: Object.fromEntries(headers()),
         body: JSON.stringify({ callId })

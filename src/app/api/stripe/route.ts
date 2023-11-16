@@ -6,7 +6,7 @@ import { getServerSession } from 'next-auth'; // Ensure this is the right path t
 import authOptions from '@/lib/auth'
 import { NextResponse } from "next/server";
 
-const return_url = process.env.NEXT_BASE_URL + "/settings";
+const return_url = process.env.NEXT_BASE_URL_PROD + "/settings";
 
 export async function GET() {
   try {

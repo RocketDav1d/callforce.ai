@@ -41,7 +41,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       prompt
     })
     console.log(request_body)
-    const response = await fetch('http://127.0.0.1:8000/prompt', {
+    const response = await fetch('https://callforce-worker-07ee47d87df1.herokuapp.com/prompt', {
+    // const response = await fetch('http://127.0.0.1:8000/prompt', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

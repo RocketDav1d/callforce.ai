@@ -43,7 +43,8 @@ export async function POST(req: Request) {
 
     console.log("Properties inside Hubspot query route: ", properties, "and UserId: ", userId);
 
-    const response = await fetch('http://127.0.0.1:8000/hubspot/properties/query', {
+    const response = await fetch('https://callforce-worker-07ee47d87df1.herokuapp.com/hubspot/properties/query', {
+    // const response = await fetch('http://127.0.0.1:8000/hubspot/properties/query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
