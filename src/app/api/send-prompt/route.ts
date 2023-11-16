@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth'
 import prisma from '../../../lib/db';  // Adjust the path as needed
 import { v4 as uuidv4 } from 'uuid';
 
-
+export const maxDuration = 20
 
 
 export async function POST(req: NextRequest, res: NextResponse) {
