@@ -185,6 +185,10 @@ const Page = ({params: {callId}}: Prop) => {
       prompt: response.prompt
     };
     try {
+      toast({
+        title: "Prompt submitted",
+        description: response.prompt
+      })
       const createdMessage = await createMessage(newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     }
