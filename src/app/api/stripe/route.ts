@@ -4,7 +4,6 @@ import prisma from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { getServerSession } from 'next-auth'; // Ensure this is the right path to getServerSession
 import authOptions from '@/lib/auth'
-import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 const return_url = process.env.NEXT_BASE_URL + "/settings";
