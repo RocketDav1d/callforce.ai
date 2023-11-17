@@ -21,6 +21,19 @@ pnpm dev
 bun dev
 ```
 
+to generate the prisma client run
+```bash
+npx prisma generate
+```
+
+If you want to make changes to the Database model, change the schema.prisma and run
+```bash
+prisma migrate dev --name init
+```
+change init for a descriptive name after your first migration
+
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
