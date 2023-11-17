@@ -43,23 +43,23 @@ For this App to work you have to create accounts for:
 
 
 ## Project Structure
-To get a better understading of the Project take a look at this (Relational Diagram)[https://lucid.app/lucidspark/af4257ef-5473-496c-bd14-3463326e44ee/edit?invitationId=inv_0ebaa207-f1ed-4419-badb-0f3fb79022be&page=0_0#]
+To get a better understading of the Project take a look at this [Relational Diagram](https://lucid.app/lucidspark/af4257ef-5473-496c-bd14-3463326e44ee/edit?invitationId=inv_0ebaa207-f1ed-4419-badb-0f3fb79022be&page=0_0#)
 
 
 ## Tech Stack
 
-Frontend: NextJS 13 with TypeScript
-Component Library: shadcn/ui, radix-ui, lucide-react
-Data Fetching: TanStack Query
-Backend: NextJS
-Worker Backend: Fastapi Python
-Database: Postgres Database using Prisma ORM
-Authentication: In the Frontend, using NextAuth
-Hosting: 
-- NextJS App hosted on Vercel
-- FastApi Worker hosted on Heroku
-- Postgres Database hosted on Supabase
-- chroma db instance hosted on AWS 
+- Frontend: NextJS 13 with TypeScript
+- Component Library: shadcn/ui, radix-ui, lucide-react
+- Data Fetching: TanStack Query
+- Backend: NextJS
+- Worker Backend: Fastapi Python
+- Database: Postgres Database using Prisma ORM
+- Authentication: In the Frontend, using NextAuth
+- Hosting: 
+    - NextJS App hosted on Vercel
+    - FastApi Worker hosted on Heroku
+    - Postgres Database hosted on Supabase
+    - chroma db instance hosted on AWS 
 
 
 ## Deploy on Vercel
