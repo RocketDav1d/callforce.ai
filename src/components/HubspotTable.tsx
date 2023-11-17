@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React, { useEffect, useState } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,6 +35,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import axios from "axios"
 
 const data: Payment[] = [
   {
@@ -172,6 +173,46 @@ export default function HubspotTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+
+  const [PropertyData, setPropertyData] = React.useState(null);
+
+  // Fetch data when the component mounts
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/hubspot/get`, { withCredentials: true });
+        setPropertyData(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+        // Handle error appropriately
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Find property matches when propertyData is updated
+  React.useEffect(() => {
+    const findPropertyMatches = async () => {
+      if (PropertyData) {
+        try {
+          const response = await axios.post(`/api/hubspot/make-query`, PropertyData, { withCredentials: true });
+          if (response.status === 200) {
+            console.log("Inside findPropertyMatches", response.data);
+          }
+        } catch (error) {
+          console.error('Error in findPropertyMatches:', error);
+          // Handle error appropriately
+        }
+      }
+    };
+
+    findPropertyMatches();
+  }, [PropertyData]); // Dependency on propertyData
+
+
+
 
   const table = useReactTable({
     data,
