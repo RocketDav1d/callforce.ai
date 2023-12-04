@@ -2,6 +2,9 @@ import AWS from 'aws-sdk'
 
 export async function uploadToS3(file: File) {
      try {
+        console.log('uploading to S3...', file.name)
+        console.log("S3_ACCESS_KEY_ID", process.env.NEXT_PUBLIC_S3_AWS_ACCESS_KEY_ID)
+        console.log("S3_SECRET_KEY", process.env.NEXT_PUBLIC_S3_AWS_SECRET_ACCESS_KEY)
         AWS.config.update({
             accessKeyId: process.env.NEXT_PUBLIC_S3_AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.NEXT_PUBLIC_S3_AWS_SECRET_ACCESS_KEY,

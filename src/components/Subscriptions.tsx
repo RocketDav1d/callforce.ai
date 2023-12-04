@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button"
 import axios from 'axios'
 import { set } from 'zod'
 
-const Subscriptions = () => {
+type SubscriptionsProps = {
+  hasSubscription: boolean;
+};
+
+
+const Subscriptions = ({ hasSubscription }: SubscriptionsProps) => {
     const [loading, setLoading] = React.useState(false)
 
     const handleSubscription = async () => {
@@ -22,7 +27,9 @@ const Subscriptions = () => {
 
   return (
     <div>
-        <Button onClick={handleSubscription}>Upgrade to Pro</Button>
+        <Button onClick={handleSubscription}>
+        {hasSubscription ? "Manage Subscriptions" : "Upgrade to Pro"}
+      </Button>
     </div>
   )
 }

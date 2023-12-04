@@ -110,6 +110,16 @@ const getUserID = async () => {
     }
 }
 
+const getUserSubscription = async (userId: string) => {
+  const subscription = await prisma.userSubscription.findUnique({
+    where: { userId: userId }
+  });
+  console.log("Subscription inside getUserSubscription:", subscription) 
+  return subscription !== null;
+};
+
+console.log("HAAAALLLLOOOOOOOO", "haus")
+
 const getAccount = async (userId: string) => {
     try {
 
@@ -352,7 +362,8 @@ const page = async () => {
     }
 
 
-    
+    const hasSubscription = await getUserSubscription(userId);
+    console.log("Has Subscription", hasSubscription)
 
     const session = await getServerSession(authOptions);
     if(session?.user) {
@@ -404,7 +415,7 @@ const page = async () => {
                           <CardHeader>
                             <CardTitle>Manage Subscription</CardTitle>
                             <CardContent>
-                              <Subscriptions/>
+                              <Subscriptions hasSubscription={hasSubscription}/>
                             </CardContent>
                           </CardHeader>
                         </Card>

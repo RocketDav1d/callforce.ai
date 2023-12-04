@@ -5,7 +5,7 @@ import prisma from '../../../lib/db';  // Adjust the path as needed
 import { v4 as uuidv4 } from 'uuid';
 
 
-export const maxDuration = 30
+export const maxDuration = 35
 
 
 export async function POST(req: Request) {
@@ -52,8 +52,8 @@ export async function POST(req: Request) {
 
     // hubspot_access_token,
     // hubspot_refresh_token,
-    const response = await fetch('https://callforce-worker-07ee47d87df1.herokuapp.com/extract', {
-    // const response = await fetch('http://127.0.0.1:8000/extract', {
+    // const response = await fetch('https://callforce-worker-07ee47d87df1.herokuapp.com/extract', {
+    const response = await fetch('http://127.0.0.1:8000/extract', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

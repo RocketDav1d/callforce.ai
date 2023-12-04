@@ -50,6 +50,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+            data-testid="sidebar-toggle"
           >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>

@@ -21,8 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import FileUpload from './FileUpload';
 import axios from 'axios';
+import FileUploadApiService from '../lib/service/FileUploadApiService';
 
 
 interface Group {
@@ -103,6 +103,7 @@ const UploadParentComponent = () => {
       <FileUpload2
       dialogData={dialogData}
       onUploadComplete={handleFileUploadComplete}
+      apiService={FileUploadApiService}
     />
     ) : (
           <div className="flex flex-col space-y-4">
